@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: desperta_ai_api
+    restart: always
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
+      - mongo
+    env_file:
+      - .env
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    networks:
+      - desperta-rede
+
+  postgres:
+    image: postgres:15
+    container_name: desperta_ai_postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USUARIO:-desperta}
+      POSTGRES_PASSWORD: ${POSTGRES_SENHA:-senha_segura}
+      POSTGRES_DB: ${POSTGRES_BD:-desperta_ai}
+    volumes:
+      - postgres_dados:/var/lib/postgresql/data
+    networks:
+      - desperta-rede
+
+  mongo:
+    image: mongo:6
+    container_name: desperta_ai_mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_dados:/data/db
+    networks:
+      - desperta-rede
+
+networks:
+  desperta-rede:
+    driver: bridge
+
+volumes:
+  postgres_dados:
+  mongo_dados:
