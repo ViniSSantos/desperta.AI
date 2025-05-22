@@ -15,10 +15,10 @@ import { IsNotEmpty, IsUUID, IsOptional, IsString } from 'class-validator';
  *           description: ID do usuário que está sendo despertado
  *         latitude:
  *           type: string
- *           description: Latitude para obter o clima local (opcional)
+ *           description: Latitude (opcional – será detectada automaticamente se não fornecida)
  *         longitude:
  *           type: string
- *           description: Longitude para obter o clima local (opcional)
+ *           description: Longitude (opcional – será detectada automaticamente se não fornecida)
  */
 export class DespertarDTO {
   @IsNotEmpty({ message: 'ID do usuário é obrigatório' })

@@ -24,8 +24,30 @@ export class DespertarServico {
         cidade: 'Desconhecida'
       };
 
+      /*
       if (despertarDTO.latitude && despertarDTO.longitude) {
         clima = await this.obterInformacoesClima(despertarDTO.latitude, despertarDTO.longitude);
+      }
+      */
+
+      let latitude = despertarDTO.latitude;
+      let longitude = despertarDTO.longitude;
+      if (!latitude || !longitude) {
+        try{
+          const geolocalizacao = await axios.get('https://ipwho.is/');
+
+          if(geolocalizacao.data.success){
+            latitude = geolocalizacao.data.latitude.toString();
+            longitude = geolocalizacao.data.longitude.toString();
+          }
+
+        } catch(geoError){
+          console.warn('⚠️ Não foi possível obter localização via IP. Usando dados padrão.');
+        }
+      }
+
+      if (latitude && longitude) {
+        clima = await this.obterInformacoesClima(latitude, longitude);
       }
 
       // Obter frase motivacional
